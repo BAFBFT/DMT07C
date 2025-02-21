@@ -60,13 +60,8 @@ void setup() {
  
 void loop() {
   // Set values to send
-  myData.id = 1;
-  myData.num = 1;
-  
-  digitalWrite(ledPin, HIGH);
-  delay(500);
-  digitalWrite(ledPin, LOW);
-  delay(500);
+  myData.id = 2;
+  myData.num = random(0,50);
   
   // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
@@ -77,5 +72,4 @@ void loop() {
   else {
     Serial.println("Error sending the data");
   }
-  delay(2000);
 }

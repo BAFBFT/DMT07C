@@ -23,19 +23,19 @@ struct_message board2;
 struct_message boardsStruct[2] = {board1, board2};
 
 // callback function that will be executed when data is received
+// Callback function for receiving data
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
-  char macStr[18];
-  Serial.print("Packet received from: ");
-  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
-  Serial.println(macStr);
-  memcpy(&myData, incomingData, sizeof(myData));
-  Serial.printf("Board ID %u: %u bytes\n", myData.id, len);
-  // Update the structures with the new incoming data
-  boardsStruct[myData.id-1].num = myData.num;
-  Serial.printf("value: %d \n", boardsStruct[myData.id-1].num);
-  Serial.println();
+  struct_message receivedData;
+  memcpy(&receivedData, incomingData, sizeof(receivedData));
+
+  if (receivedData.id >= 1 && receivedData.id <= 2) {
+    boardsStruct[receivedData.id - 1].num = receivedData.num;
+  }
+  
+  Serial.printf("Board ID %u: Received value: %d\n", receivedData.id, receivedData.num);
 }
+
+
  
 void setup() {
   //Initialise GPIO2 as output
@@ -62,29 +62,22 @@ void setup() {
 }
  
 void loop() {
-  // Acess the variables for each board
-  /*int board1X = boardsStruct[0].x;
-  int board1Y = boardsStruct[0].y;
-  int board2X = boardsStruct[1].x;
-  int board2Y = boardsStruct[1].y;
-  int board3X = boardsStruct[2].x;
-  int board3Y = boardsStruct[2].y;*/
-  int board1num = boardsStruct[0].num;
-  int board2num = boardsStruct[1].num;
+  static unsigned long lastBlinkTime = 0;
+  const unsigned long blinkDuration = 500;
 
-  if (board1num == 1) {
-    digitalWrite(ledPin1, HIGH);
-    delay(500);
-    digitalWrite(ledPin1, LOW);
-    delay(500);
-    board1num = 0;
+  if (boardsStruct[0].num == 1) {
+    if (millis() - lastBlinkTime >= blinkDuration) {
+      digitalWrite(ledPin1, !digitalRead(ledPin1));
+      lastBlinkTime = millis();
+      boardsStruct[0].num = 0;
     }
-   
-  if (board2num == 1) {
-    digitalWrite(ledPin2, HIGH);
-    delay(500);
-    digitalWrite(ledPin2, LOW);
-    delay(500);
-    board2num = 0;
+  }
+
+  if (boardsStruct[1].num == 1) {
+    if (millis() - lastBlinkTime >= blinkDuration) {
+      digitalWrite(ledPin2, !digitalRead(ledPin2));
+      lastBlinkTime = millis();
+      boardsStruct[1].num = 0;
     }
+  }
 }
