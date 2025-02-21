@@ -1,17 +1,17 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-//ledPin as GPIO35
-const int ledPin = 35; 
+//ledPin as GPIO17
+const int ledPin = 17; 
 
 // REPLACE WITH THE RECEIVER'S MAC Address
-uint8_t broadcastAddress[] = {0xF8, 0xB3, 0xB7, 0x33, 0x1E, 0x9C};
+uint8_t broadcastAddress[] = {0xD0, 0xEF, 0x76, 0x47, 0xF7, 0x44};
 
 // Structure example to send data
 // Must match the receiver structure
 typedef struct struct_message {
     int id; // must be unique for each sender board
-    int x;
+    int num;
 } struct_message;
 
 // Create a struct_message called myData
@@ -61,7 +61,7 @@ void setup() {
 void loop() {
   // Set values to send
   myData.id = 1;
-  myData.x = 1;
+  myData.num = 1;
   
   digitalWrite(ledPin, HIGH);
   delay(500);
@@ -77,5 +77,5 @@ void loop() {
   else {
     Serial.println("Error sending the data");
   }
-  delay(10000);
+  delay(5000);
 }
