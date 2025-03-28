@@ -2,7 +2,7 @@
 
 const int motorPwmPin_power = 17;  
 const int motorPwmPin_speed = 18;
-const int motorDirectionPin = 16;
+const int motorDirectionPin = 19;
 const int pwmChannel  = 0;  
 const int pwmFreq     = 20000; 
 const int pwmResolution = 8;   
