@@ -62,22 +62,4 @@ void setup() {
 }
  
 void loop() {
-  static unsigned long lastBlinkTime = 0;
-  const unsigned long blinkDuration = 500;
-
-  if (boardsStruct[0].num == 1) {
-    if (millis() - lastBlinkTime >= blinkDuration) {
-      digitalWrite(ledPin1, !digitalRead(ledPin1));
-      lastBlinkTime = millis();
-      boardsStruct[0].num = 0;
-    }
-  }
-
-  if (boardsStruct[1].num == 1) {
-    if (millis() - lastBlinkTime >= blinkDuration) {
-      digitalWrite(ledPin2, !digitalRead(ledPin2));
-      lastBlinkTime = millis();
-      boardsStruct[1].num = 0;
-    }
-  }
 }

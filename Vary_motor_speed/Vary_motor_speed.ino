@@ -14,8 +14,7 @@ const int potPin = 22;
 int potValue = 0; //save analog value
 
 void setup(){
-  // Configure pot pin
-  pinMode(potPin, INPUT);
+  Serial.begin(115200);
   
    // Configure pin mode for power pin
   pinMode(motorDirectionPin, OUTPUT);
@@ -36,4 +35,5 @@ void loop(){
     
     ledcWrite(motorPwmPin_torque, potValue);   
     delay(15); //small delay for stability
+    Serial.println(potValue);
 }
