@@ -7,8 +7,8 @@ const int motorDirectionPin = 19;
 const int pwmChannel  = 0;  
 const int pwmFreq     = 20000; 
 const int pwmResolution = 8;   
-const int potPin = 22;
-
+const int potPin = 34;
+ 
 
 //Variables:
 int potValue = 0; //save analog value
@@ -32,6 +32,7 @@ void loop(){
     potValue = analogRead(potPin);
     //Vary torque using ledcWrite
     potValue = map(potValue, 0, 4095, 0, 255); //Map value 0-4095 to 0-255 (PWM)
+   
     
     ledcWrite(motorPwmPin_torque, potValue);   
     delay(15); //small delay for stability
