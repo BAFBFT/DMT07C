@@ -1,40 +1,50 @@
-#include "esp32-hal-ledc.h"
+// Constants
+#define motorPwmPin_power 17
+#define motorPwmPin_torque 18
+#define motorDirectionPin 19
+#define potPin 34
+#define buttonPin 16 // Assign your button to GPIO 16 
 
-//Constants
-const int motorPwmPin_power = 17;  
-const int motorPwmPin_torque = 18;
-const int motorDirectionPin = 19;
-const int pwmChannel  = 0;  
-const int pwmFreq     = 20000; 
-const int pwmResolution = 8;   
-const int potPin = 34;
- 
+#define pwmChannel 0
+#define pwmFreq 20000
+#define pwmResolution 8
 
-//Variables:
-int potValue = 0; //save analog value
+// Variables
+volatile bool motorOn = false; // Motor starts OFF
+int potValue = 0;
 
-void setup(){
-  Serial.begin(115200);
-  
-   // Configure pin mode for power pin
+void setup() {
+
+  // Configure pins
   pinMode(motorDirectionPin, OUTPUT);
   digitalWrite(motorDirectionPin, LOW);
-  
-  // Configure pin mode for power pin
   pinMode(motorPwmPin_power, OUTPUT);
-  digitalWrite(motorPwmPin_power, HIGH);
+  digitalWrite(motorPwmPin_power, HIGH); // Motor driver ON
+  pinMode(buttonPin, INPUT); // Button with pull-up
 
-  // Setup PWM channel and attach the speed control pin
+  // Attach PWM
   ledcAttach(motorPwmPin_torque, pwmFreq, pwmResolution);
 }
 
-void loop(){
+void loop() {
+  static bool lastButtonState = HIGH;            // remembered value
+  bool buttonState = digitalRead(buttonPin);    // current value
+
+  if (buttonState == LOW && lastButtonState == HIGH)  // edge detected
+  {
+    motorOn = !motorOn;         // toggle motor state
+    delay(50);                  // crude bounce soak-time (optional)
+  }
+  lastButtonState = buttonState;
+
+  if (motorOn) {
     potValue = analogRead(potPin);
-    //Vary torque using ledcWrite
-    potValue = map(potValue, 0, 4095, 0, 255); //Map value 0-4095 to 0-255 (PWM)
-   
-    
-    ledcWrite(motorPwmPin_torque, potValue);   
-    delay(15); //small delay for stability
-    Serial.println(potValue);
+    potValue = map(potValue, 0, 4095, 0, 255); // Map to PWM range
+  } else {
+    potValue = 0; // Force motor off
+  }
+
+  ledcWrite(motorPwmPin_torque, potValue);
+  delay(15);
+  Serial.println(potValue);
 }
