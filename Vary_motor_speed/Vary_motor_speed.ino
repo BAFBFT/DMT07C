@@ -7,7 +7,7 @@ const int motorDirectionPin = 19;
 const int pwmChannel  = 0;  
 const int pwmFreq     = 20000; 
 const int pwmResolution = 8;   
-const int potPin = 22;
+const int potPin = 34;
 
 
 //Variables:
