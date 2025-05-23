@@ -1,0 +1,31 @@
+#include <Arduino.h>
+#include "HX711.h"
+
+// HX711 wiring
+const int LOADCELL_DOUT_PIN = 16;
+const int LOADCELL_SCK_PIN  = 4;
+
+// How often to read & print, in milliseconds:
+unsigned long readInterval = 500;  
+
+HX711 scale;
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialize HX711
+  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  scale.set_scale(47000);   // calibration factor
+  scale.tare();             // zero out
+}
+
+void loop() {
+  // Read (average of 10 samples, minus tare) and print
+  float weight = scale.get_units(10);
+  Serial.println(weight, 3);
+
+  // Power-cycle ADC to save noise/power (optional)
+  scale.power_down();
+  delay(readInterval);
+  scale.power_up();
+}
