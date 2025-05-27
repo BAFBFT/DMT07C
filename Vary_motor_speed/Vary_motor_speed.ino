@@ -1,7 +1,7 @@
 // Constants
-#define motorPwmPin_power 17
-#define motorPwmPin_torque 18
-#define motorDirectionPin 19
+#define motorPwmPin_power 26
+#define motorPwmPin_torque 27
+#define motorDirectionPin 25
 #define potPin 34
 #define buttonPin 16 // Assign your button to GPIO 16 
 
